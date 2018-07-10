@@ -1,6 +1,6 @@
 const graphql = require('graphql');
+const axios = require('axios');
 const _ = require('lodash');
-const users = require('../dumpDB');
 
 const {
     GraphQLObjectType,
@@ -9,9 +9,19 @@ const {
     GraphQLInt
 } = graphql;
 
+const CompanyType = new GraphQLObjectType({
+    name: 'Company',
+    description: '회사 타입(모델)',
+    fields: {
+        id: { type: GraphQLString },
+        name: { type: GraphQLString },
+        description: { type: GraphQLString }
+    }
+});
+
 const UserType = new GraphQLObjectType({
     name: 'User',
-    description: '유저 데이터',
+    description: '유저 타입(모델)',
     fields: {
         id: { type: GraphQLString },
         firstName: {
@@ -21,19 +31,31 @@ const UserType = new GraphQLObjectType({
         age: {
             type: GraphQLInt,
             description: '나이'
+        },
+        company: {
+            type: CompanyType,
+            description: '회사 데이터',
+            resolve(parentValue, args) {
+                return axios
+                    .get(`http://localhost:3000/companies/${parentValue.companyId}`)
+                    .then(res => res.data);
+            }
         }
     }
 });
 
+
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
-    description: '유저 데이터 찾는 Root',
+    description: 'RootQuery',
     fields: {
         user: {
             type: UserType,
             args: { id: { type: GraphQLString } },
             resolve(parentValue, args) {
-                return _.find(users, { id: args.id });
+                return axios
+                    .get(`http://localhost:3000/users/${args.id}`)
+                    .then(res => res.data);
             }
         }
     }

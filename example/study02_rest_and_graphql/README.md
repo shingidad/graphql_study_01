@@ -1,6 +1,6 @@
-# GraphQL 에서 여러 데이터 가져오기
+# GraphQL resolve(REST) 와 여러 데이터 가져오기
 
-예로 들어 회사 데이터가 2개 이상이 있을경우 사용방법
+resolve(REST)를 이용하여 데이터를 가져올 뿐더러, 데이터가 2개 이상이 있을경우 사용방법
 
 ![rest+graphql](./doc/img/screenshot_01_rest_and_graphql.png)
 ![rest+graphql](./doc/img/screenshot_02_rest_and_graphql.png)
@@ -97,3 +97,67 @@
 ```
 
 ![rest+graphql+multiple](./doc/img/screenshot_03_multiple.png)
+
+
+### Fragment
+위 내용 처럼 여러 데이터를 가져온다고 할 경우, 매번 `field name`을 다 작성하기는
+반복적인 일이다. 이를 `fragment`로 정의해서 한번에 가져올 수 있다.
+
+fragment `fragment명` on `TypeName`
+
+
+```graphql
+{
+  apple: company(id: "1") {
+    ...componyDetails
+  }
+  google: company(id: "2") {
+    ...componyDetails
+  }
+}
+
+fragment componyDetails on Company {
+  id
+  name
+  description
+  users {
+    id
+    firstName
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "apple": {
+      "id": "1",
+      "name": "Apple",
+      "description": "iphone",
+      "users": [
+        {
+          "id": "23",
+          "firstName": "Bill"
+        }
+      ]
+    },
+    "google": {
+      "id": "2",
+      "name": "Google",
+      "description": "search",
+      "users": [
+        {
+          "id": "40",
+          "firstName": "Alex"
+        },
+        {
+          "id": "41",
+          "firstName": "Nick"
+        }
+      ]
+    }
+  }
+}
+```
+
+![rest+graphql+multiple+fragment](./doc/img/screenshot_04_multiple_fragment.png)

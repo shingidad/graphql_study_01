@@ -2,6 +2,8 @@
 
 예로 들어 회사 데이터가 2개 이상이 있을경우 사용방법
 
+![rest+graphql](./doc/img/screenshot_01_rest_and_graphql.png)
+![rest+graphql](./doc/img/screenshot_02_rest_and_graphql.png)
 ### Example DB
 ```json
 "companies": [
@@ -93,3 +95,5 @@
   }
 }
 ```
+
+![rest+graphql+multiple](./doc/img/screenshot_03_multiple.png)
